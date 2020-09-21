@@ -156,6 +156,7 @@ class Game
 
     def try_turn 
         @board.print_board
+        next_slot = nil
         until next_slot do
             next_slot = gets.chomp
 
