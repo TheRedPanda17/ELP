@@ -1,9 +1,7 @@
 // Roman Numerals
 function convertToRoman(num) {
-    let numArr = [1000, 500, 100, 50, 10, 5, 1];
-    let secondaryNums = [900, 400, 90, 40, 9, 4];
-    let letterArr = ['M', 'D', 'C', 'L', 'X', 'V', 'I'];
-    let secondaryLetters = ['CM', 'CD', 'XC', 'XL', 'IX', 'IV'];
+    let numArr = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+    let letterArr = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
     let romanString = '';
 
     while (num > 0) {
@@ -11,11 +9,6 @@ function convertToRoman(num) {
             if (num >= numArr[i]) {
                 romanString += letterArr[i];
                 num -= numArr[i];
-                break;
-            }
-            else if (i < secondaryNums.length && num >= secondaryNums[i]) {
-                romanString += secondaryLetters[i];
-                num -= secondaryNums[i];
                 break;
             }
         }
