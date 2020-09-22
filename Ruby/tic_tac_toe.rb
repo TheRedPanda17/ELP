@@ -24,6 +24,47 @@ class Slot
     end
 end
 
+class WinnerFinder
+    def initialize(board)
+        @board = board
+        clear_variables()
+    end
+
+    def clear_variables
+        @row_total = [0,0,0]
+        @col_total = [0,0,0]
+        @diag_total = 0
+        @reverse_diag_total = 0
+    end
+
+    def loop_board
+        clear_variables()
+        3.times do |row|
+            3.times do |col|
+                unless @board.slots[row][col].symbol == ' '
+                    @reverse_diag_total += @board.slots[row][col].symbol == 'X' ? 1 : -1 if row + col == 2
+                    @diag_total += @board.slots[row][col].symbol == 'X' ? 1 : -1 if row == col
+                    @row_total[row] += @board.slots[row][col].symbol == 'X' ? 1 : -1
+                    @col_total[col] += @board.slots[row][col].symbol == 'X' ? 1 : -1
+                end
+            end
+        end
+    end
+
+    def get_winner
+        loop_board()
+        # Check if any of the totals are +3. If so, X's won
+        if @reverse_diag_total == 3 || @diag_total == 3 || @row_total.any? {|total| total == 3} || @col_total.any? {|total| total == 3}
+            'X'
+        # Check if any of the totals are -3. If so, O's won 
+        elsif @reverse_diag_total == -3 || @diag_total == -3 || @row_total.any? {|total| total == -3} || @col_total.any? {|total| total == -3}
+            'O'
+        else
+            nil
+        end
+    end
+end
+
 class Board
     attr_reader :slots
 
@@ -32,19 +73,11 @@ class Board
     end
 
     def filled?
-        @slots.all? do |row| 
-            row.all? do |slot|
-                slot.occupied
-            end
-        end
+        @slots.all? { |row| row.all? { |slot| slot.occupied } }
     end
 
     def reset_board
-        @slots = (1..3).map do |row| 
-            (1..3).map do |slot|
-                Slot.new
-            end
-        end
+        @slots = (1..3).map { |row| (1..3).map { |slot| Slot.new } }
     end
 
     def take_turn(symbol, next_slot)
@@ -62,44 +95,18 @@ class Board
     end
     
     # X's are positive, O's are negative
-    def get_winner
-        row_total = [0,0,0]
-        col_total = [0,0,0]
-        diag_total = 0
-        reverse_diag_total = 0
-        3.times do |row|
-            3.times do |col|
-                unless @slots[row][col].symbol == ' '
-                    reverse_diag_total += @slots[row][col].symbol == 'X' ? 1 : -1 if row + col == 2
-                    diag_total += @slots[row][col].symbol == 'X' ? 1 : -1 if row == col
-                    row_total[row] += @slots[row][col].symbol == 'X' ? 1 : -1
-                    col_total[col] += @slots[row][col].symbol == 'X' ? 1 : -1
-                end
-            end
-        end
 
-        # Check if any of the totals are +3. If so, X's won
-        if reverse_diag_total == 3 || diag_total == 3 || row_total.any? {|total| total == 3} || col_total.any? {|total| total == 3}
-            'X'
-        # Check if any of the totals are -3. If so, O's won 
-        elsif reverse_diag_total == -3 || diag_total == -3 || row_total.any? {|total| total == -3} || col_total.any? {|total| total == -3}
-            'O'
-        else
-            nil
-        end
-    end
-
-    def print_board
-        print "\n #{@slots[0][0].symbol} | #{@slots[0][1].symbol} | #{@slots[0][2].symbol}"
-        print "\t 1 | 2 | 3\n"
-        print "---|---|---"
-        print "\t---|---|---\n"
-        print " #{@slots[1][0].symbol} | #{@slots[1][1].symbol} | #{@slots[1][2].symbol}"
-        print "\t 4 | 5 | 6\n"
-        print "---|---|---"
-        print "\t---|---|---\n"
-        print " #{@slots[2][0].symbol} | #{@slots[2][1].symbol} | #{@slots[2][2].symbol}"
-        print "\t 7 | 8 | 9\n\n"
+    def to_s
+        str = "\n #{@slots[0][0].symbol} | #{@slots[0][1].symbol} | #{@slots[0][2].symbol}"
+        str += "\t 1 | 2 | 3\n"
+        str += "---|---|---"
+        str += "\t---|---|---\n"
+        str += " #{@slots[1][0].symbol} | #{@slots[1][1].symbol} | #{@slots[1][2].symbol}"
+        str += "\t 4 | 5 | 6\n"
+        str += "---|---|---"
+        str += "\t---|---|---\n"
+        str += " #{@slots[2][0].symbol} | #{@slots[2][1].symbol} | #{@slots[2][2].symbol}"
+        str += "\t 7 | 8 | 9\n\n"
     end
 end
 
@@ -108,6 +115,7 @@ class Game
         @player1 = player1 
         @player2 = player2
         @board = Board.new
+        @winner_finder = WinnerFinder.new(@board)
     end
 
     def start
@@ -155,7 +163,7 @@ class Game
     end
 
     def try_turn 
-        @board.print_board
+        print @board
         next_slot = nil
         until next_slot do
             next_slot = gets.chomp
@@ -186,7 +194,7 @@ class Game
 
     # Boolean functions
     def game_over?
-        return @board.filled? || @board.get_winner
+        return @board.filled? || @winner_finder.get_winner()
     end
 
     def play_again?
@@ -203,7 +211,7 @@ class Game
 
     # Printing functions
     def print_game_results 
-        winner_symbol = @board.get_winner()
+        winner_symbol = @winner_finder.get_winner()
         winner = @player1.symbol == winner_symbol ? 
             @player1 :  
             @player2.symbol == winner_symbol ?
@@ -217,7 +225,7 @@ class Game
             puts 'Tie Game!'
         end
 
-        @board.print_board
+        print @board
     end
 
     def print_player_turn
