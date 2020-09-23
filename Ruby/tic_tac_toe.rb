@@ -16,12 +16,13 @@ class Player
 end
 
 class Slot
-    attr_accessor :symbol, :occupied
+    attr_accessor :symbol
 
     def initialize
         @symbol = ' '
-        @occupied = false
     end
+
+    def occupied?; symbol != ' ' end
 end
 
 class WinnerFinder
@@ -51,7 +52,7 @@ class WinnerFinder
         end
     end
 
-    def get_winner
+    def get_winner_symbol
         loop_board()
         # Check if any of the totals are +3. If so, X's won
         if @reverse_diag_total == 3 || @diag_total == 3 || @row_total.any? {|total| total == 3} || @col_total.any? {|total| total == 3}
@@ -73,28 +74,16 @@ class Board
     end
 
     def filled?
-        @slots.all? { |row| row.all? { |slot| slot.occupied } }
+        @slots.all? { |row| row.all? { |slot| slot.occupied? } }
     end
 
     def reset_board
         @slots = (1..3).map { |row| (1..3).map { |slot| Slot.new } }
     end
-
-    def take_turn(symbol, next_slot)
-        # Convert from slot to 2d array
-        row = next_slot < 4 ? 0 : next_slot < 7 ? 1 : 2
-        col = next_slot % 3 - 1
-        slot = @slots[row][col]
-
-        if slot.occupied
-            puts 'This slot is already taken. Try somewhere else'
-        else
-            slot.symbol = symbol
-            slot.occupied = true
-        end
-    end
     
-    # X's are positive, O's are negative
+    def mark_slot(symbol, row, col)
+        @slots[row][col].symbol = symbol
+    end
 
     def to_s
         str = "\n #{@slots[0][0].symbol} | #{@slots[0][1].symbol} | #{@slots[0][2].symbol}"
@@ -110,91 +99,102 @@ class Board
     end
 end
 
-class Game
+class GameLoop
+    def initialize(board, player1, player2)
+        @board = board
+        @player1 = player1
+        @player2 = player2
+
+        @whos_turn = player1
+        @play_again = true
+        @game_turn = GameTurn.new(@board)
+        @winner_finder = WinnerFinder.new(@board)
+    end
+
+    def play_tic_tac_toe
+        @board.reset_board
+        until game_over? do
+            print_player_turn()
+            @game_turn.take_turn(@whos_turn.symbol)
+            change_turn()
+        end
+        get_winning_player()
+    end
+
+    def game_over?
+        return @board.filled? || @winner_finder.get_winner_symbol()
+    end
+
+    def get_winning_player() 
+        winner_symbol = @winner_finder.get_winner_symbol()
+        winner = @player1.symbol == winner_symbol ? 
+            @player1 :  
+            @player2.symbol == winner_symbol ?
+                @player2 : 
+                nil
+    end
+
+    def change_turn 
+        @whos_turn = @whos_turn == @player1 ? @player2 : @player1
+    end    
+
+    def print_player_turn
+        puts "#{@whos_turn.name}'s turn. Type a number between 1-9 to place your '#{@whos_turn.symbol}.'"
+    end
+end
+
+class GameTurn
+    def initialize(board)
+        @board = board
+    end
+
+    def take_turn(symbol)
+        print @board
+        slot_location = nil
+        until slot_location do
+            slot_number = gets.chomp
+
+            if slot_number.to_i < 10 && slot_number.to_i > 0
+                slot_location = convert_turn_number_to_slot_location(slot_number.to_i)
+
+                if @board.slots[slot_location[:row]][slot_location[:col]].occupied?
+                    slot_location = nil 
+                    puts 'That slot is occupied!'
+                end
+            else
+                puts 'Please enter a number between 1-9!'
+            end
+        end
+
+        @board.mark_slot(symbol, slot_location[:row], slot_location[:col])
+    end
+
+    def convert_turn_number_to_slot_location (slot_number)
+        row = slot_number < 4 ? 0 : slot_number < 7 ? 1 : 2
+        col = slot_number % 3 - 1
+        {row: row, col: col}
+    end
+end
+
+class GameRunner
     def initialize(player1, player2)
         @player1 = player1 
         @player2 = player2
         @board = Board.new
-        @winner_finder = WinnerFinder.new(@board)
+        @game_loop = GameLoop.new(@board, @player1, @player2)
     end
 
-    def start
+    def run_game
         @whos_turn = @player1
-        start_game_loop()
-    end
-
-    private
-    def start_game_loop
-        play_again = true
-        
-        # Outside loop for multiple games 
         while play_again? do
             reset_game()
             print_score()
-
-            # Single game loop
-            until game_over? do
-                print_player_turn()
-                try_turn()
-            end
-
-            print_game_results()
+            winner = @game_loop.play_tic_tac_toe()
+            print_game_results(winner)
         end
 
         print "\nThanks for playing, #{@player1.name} and #{@player2.name}\n"
         print_score()
-    end
-
-    def reset_game
-        games_played = @player1.wins + @player2.wins
-        @whos_turn = games_played % 2 == 0 ? @player1 : @player2
-
-        unless @whos_turn.symbol == 'X'
-            if @whos_turn == @player1
-                @player1.symbol = 'X'
-                @player2.symbol = 'O'
-            else
-                @player1.symbol = 'O'
-                @player2.symbol = 'X'
-            end
-        end
-
-        @board.reset_board()
-    end
-
-    def try_turn 
-        print @board
-        next_slot = nil
-        until next_slot do
-            next_slot = gets.chomp
-
-            if next_slot.to_i < 10 && next_slot.to_i > 0
-                next_slot = next_slot.to_i
-                turn_result = @board.take_turn(@whos_turn.symbol, next_slot)
-
-                if turn_result
-                    change_turn()
-                else
-                    next_slot = nil
-                end
-            else
-                puts 'Please enter a number between 1-9!'
-                next_slot = nil
-            end
-        end
-    end
-
-    def change_turn 
-        if @whos_turn == @player1
-            @whos_turn = @player2
-        else
-            @whos_turn = @player1
-        end
-    end            
-
-    # Boolean functions
-    def game_over?
-        return @board.filled? || @winner_finder.get_winner()
     end
 
     def play_again?
@@ -209,15 +209,24 @@ class Game
         return continue.upcase == 'Y'
     end
 
-    # Printing functions
-    def print_game_results 
-        winner_symbol = @winner_finder.get_winner()
-        winner = @player1.symbol == winner_symbol ? 
-            @player1 :  
-            @player2.symbol == winner_symbol ?
-                @player2 : 
-                nil
 
+    def reset_game
+        games_played = @player1.wins + @player2.wins
+        @whos_turn = games_played % 2 == 0 ? @player1 : @player2
+
+        unless @whos_turn.symbol == 'X'
+            if @whos_turn == @player1
+                @player1.symbol = 'X'
+                @player2.symbol = 'O'
+            else
+                @player1.symbol = 'O'
+                @player2.symbol = 'X'
+            end
+        end
+    end        
+
+    # Printing functions
+    def print_game_results (winner)
         if winner
             puts "#{winner.name} has won the game!" 
             winner.add_win()
@@ -226,10 +235,6 @@ class Game
         end
 
         print @board
-    end
-
-    def print_player_turn
-        puts "#{@whos_turn.name}'s turn. Type a number between 1-9 to place your '#{@whos_turn.symbol}.'"
     end
 
     def print_score
@@ -246,5 +251,5 @@ print "\nEnter Player 2 Name: "
 player_name = gets.chomp
 player2 = Player.new(player_name)
 
-game = Game.new(player1, player2)
-game.start()
+game = GameRunner.new(player1, player2)
+game.run_game()
