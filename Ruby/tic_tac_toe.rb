@@ -13,6 +13,10 @@ class Player
     def add_win
         @wins += 1
     end
+
+    def switch_symbol
+        @symbol = @symbol == 'X' ? 'O' : 'X'
+    end
 end
 
 class Slot
@@ -106,7 +110,6 @@ class GameLoop
         @player2 = player2
 
         @whos_turn = player1
-        @play_again = true
         @game_turn = GameTurn.new(@board)
         @winner_finder = WinnerFinder.new(@board)
     end
@@ -185,16 +188,19 @@ class GameRunner
     end
 
     def run_game
-        @whos_turn = @player1
         while play_again? do
+            play_again()
             reset_game()
-            print_score()
-            winner = @game_loop.play_tic_tac_toe()
-            print_game_results(winner)
         end
 
         print "\nThanks for playing, #{@player1.name} and #{@player2.name}\n"
         print_score()
+    end
+
+    def play_again
+        print_score()
+        winner = @game_loop.play_tic_tac_toe()
+        print_game_results(winner)
     end
 
     def play_again?
@@ -211,18 +217,9 @@ class GameRunner
 
 
     def reset_game
-        games_played = @player1.wins + @player2.wins
-        @whos_turn = games_played % 2 == 0 ? @player1 : @player2
-
-        unless @whos_turn.symbol == 'X'
-            if @whos_turn == @player1
-                @player1.symbol = 'X'
-                @player2.symbol = 'O'
-            else
-                @player1.symbol = 'O'
-                @player2.symbol = 'X'
-            end
-        end
+        @player1.switch_symbol()
+        @player2.switch_symbol()
+        @game_loop = GameLoop.new(@board, @player2, @player1)
     end        
 
     # Printing functions
