@@ -1,4 +1,6 @@
 from board import Board
+from io import StringIO
+import sys
 
 def get_empty_board(): return [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
@@ -32,6 +34,19 @@ def test_col_from_index_returns_correct_values():
   assert board._get_col_from_index(8) == 1
   assert board._get_col_from_index(9) == 2
 
+def test_index_from_col_and_row_is_correct():
+  board = Board()
+
+  assert board._get_index_from_row_and_col(0, 0) == 1
+  assert board._get_index_from_row_and_col(0, 1) == 2
+  assert board._get_index_from_row_and_col(0, 2) == 3
+  assert board._get_index_from_row_and_col(1, 0) == 4
+  assert board._get_index_from_row_and_col(1, 1) == 5
+  assert board._get_index_from_row_and_col(1, 2) == 6
+  assert board._get_index_from_row_and_col(2, 0) == 7
+  assert board._get_index_from_row_and_col(2, 1) == 8
+  assert board._get_index_from_row_and_col(2, 2) == 9
+
 def test_take_turn_adds_correct_mark():
   board = Board()
   slots = get_empty_board()
@@ -47,3 +62,27 @@ def test_take_turn_adds_correct_mark():
   slots [2][1] = 'X'
   board.take_turn(8, 'X')
   assert board._slots == slots
+
+def test_prints_empty_board():
+  empty_board_print  = "   | X |       1 | 2 | 3 \n"
+  empty_board_print += "---|---|---   ---|---|---\n"
+  empty_board_print += "   | X |       4 | 5 | 6 \n"
+  empty_board_print += "---|---|---   ---|---|---\n"
+  empty_board_print += "   | X |       7 | 8 | 9 "
+
+  board = Board()
+  board.take_turn(2, "X")
+  board.take_turn(5, "X")
+  board.take_turn(8, "X")
+
+  assert empty_board_print == str(board)
+
+def test_board_is_empty_after_clearing():
+  board = Board()
+  board.take_turn(1, "X")
+  board.take_turn(5, "X")
+  board.take_turn(8, "X")
+
+  board.clean_board()
+
+  assert board._slots == get_empty_board()
