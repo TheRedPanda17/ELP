@@ -242,11 +242,9 @@ end
 # Play the game
 print "\nWelcome to tic-tac-toe!\n"
 print "\nEnter Player 1 Name: "
-player_name = gets.chomp
-player1 = Player.new(player_name)
+player1 = Player.new(gets.chomp)
 print "\nEnter Player 2 Name: "
-player_name = gets.chomp
-player2 = Player.new(player_name)
+player2 = Player.new(gets.chomp)
 
 game = GameRunner.new(player1, player2)
 game.run_game()
