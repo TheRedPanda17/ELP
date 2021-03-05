@@ -81,13 +81,4 @@ def test_prints_board():
   board.take_turn(8, "X")
 
   assert empty_board_print == str(board)
-
-def test_board_is_empty_after_clearing():
-  board = Board()
-  board.take_turn(1, "X")
-  board.take_turn(5, "X")
-  board.take_turn(8, "X")
-
-  board.clean_board()
-
-  assert board._slots == get_empty_board()
+  

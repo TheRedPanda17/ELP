@@ -17,7 +17,7 @@ def test_board_is_full_true():
 
 def test_board_is_full_false():
   board = Board()
-  board._slots = [['X', 'X', 'O'], ['O', 'X', 'O'], ['X', 'O', '9']]
+  board._slots = [['X', 'X', 'O'], ['O', 'X', 'O'], ['X', 'O', ' ']]
   checker = Checker(board)
 
   assert checker._board_is_full() == False
@@ -33,12 +33,12 @@ def test_get_symbols_indexes():
 
   assert checker._get_symbol_indexes('X') == {0, 1, 5, 6, 8}
 
-def test_game_results_in_tie_on_full_board():
+def test_game_is_not_over():
   board = Board()
   board._slots = [
     ['X', 'X', 'O'], 
     ['O', '5', 'X'], 
-    ['X', 'O', '9']
+    ['X', 'O', ' ']
   ]
   checker = Checker(board)
 

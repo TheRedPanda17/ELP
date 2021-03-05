@@ -1,6 +1,6 @@
 class Board:
   def __init__(self):
-    self.clean_board()
+    self._slots = [[' ' for _ in range(1,4)] for slot in range(1,4)]
 
   def take_turn(self, index, symbol):
     col = self.get_col_from_index(index)
@@ -11,31 +11,25 @@ class Board:
       return True
     return False
 
-  def clean_board(self):
-    self._slots = [[' ' for _ in range(1,4)] for slot in range(1,4)]
-
-  def __str__(self):
-    string = ""
-    for row_num in range(0, 3):
-      string += self._get_row_string(row_num)
-      if row_num != 2:
+  def __str__(self, string = ""):
+    for row in range(0, 3):
+      string += self._get_row_string(row)
+      if row != 2:
         string += "\n---|---|---\n"
     return string
 
-  def _get_row_string(self, row_num):
+  def _get_row_string(self, row):
     return " {0} | {1} | {2} ".format(
-      self._get_slot_for_print(row_num, 0), 
-      self._get_slot_for_print(row_num, 1), 
-      self._get_slot_for_print(row_num, 2))
+      self._slot_str(row, 0), 
+      self._slot_str(row, 1), 
+      self._slot_str(row, 2))
 
-  def _get_slot_for_print(self, row_num, col_num):
-    if self._slots[row_num][col_num] != ' ':
-      return self._slots[row_num][col_num]
+  def _slot_str(self, row, col):
+    if self._slots[row][col] != ' ':
+      return self._slots[row][col]
     else:
-      return self.get_index_from_row_and_col(row_num, col_num)
-
-
-  # Export 
+      return self.get_index_from_row_and_col(row, col)
+ 
   def get_col_from_index(_, index):
     return (index - 1) % 3
 

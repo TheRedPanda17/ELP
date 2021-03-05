@@ -29,7 +29,7 @@ class Checker:
 
   def _board_is_full(self):
     return len(list(filter(
-      lambda slot: slot != 'X' and slot != 'O', self._get_flat_board()))) == 0
+      lambda slot: slot == ' ', self._get_flat_board()))) == 0
 
   def _get_flat_board(self):
     return list([item for sublist in self._board._slots for item in sublist])
