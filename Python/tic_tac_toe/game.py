@@ -14,13 +14,11 @@ class Game:
       self.run_turn()
 
   def run_turn(self):
-    print("\n{0}'s turn. \n".format(self._next_up.name))
+    print("\n{0}'s turn. Pick a slot\n".format(self._next_up.name))
     print(self.board)
 
-    self._get_slot_and_take_turn()
-
-    print(self.board)
-    self.change_turns()
+    if self._get_slot_and_take_turn():
+      self.change_turns()
 
   def change_turns(self):
     if self._next_up == self.player1:
@@ -38,4 +36,4 @@ class Game:
 
   def _get_slot_and_take_turn(self):
     slot = int(input())
-    self.board.take_turn(slot, self._next_up.symbol)
+    return self.board.take_turn(slot, self._next_up.symbol)

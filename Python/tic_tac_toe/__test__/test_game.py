@@ -52,6 +52,28 @@ def test_run_turn_gets_turn_and_updates_board(monkeypatch):
 
   assert expected_board == game.board._slots
 
+def test_run_turn_on_taken_slot_does_not_update(monkeypatch):
+  game = get_game()
+  expected_board = get_empty_board()
+  expected_board[0][0] = 'X'
+
+  monkeypatch.setattr('builtins.input', lambda: '1')
+  game.run_turn()
+  game.run_turn() # Second turn in same slot
+
+  assert expected_board == game.board._slots
+
+def test_run_turn_on_taken_slot_does_not_change_turn(monkeypatch):
+  player1 = Player('P1')
+  player2 = Player('P2')
+  game = Game(player1, player2, Board())
+
+  monkeypatch.setattr('builtins.input', lambda: '1')
+  game.run_turn()
+  game.run_turn()
+
+  assert game._next_up == player2
+
 def test_get_score_returns_names_and_scores():
   player1 = Player('Tam')
   player1.wins = 1

@@ -7,7 +7,10 @@ class Board:
     col = self._get_col_from_index(index)
     row = self._get_row_from_index(index)
 
-    self._slots[row][col] = symbol
+    if self._slots[row][col] == " ":
+      self._slots[row][col] = symbol
+      return True
+    return False
 
   def clean_board(self):
     self._slots = [[' ' for _ in range(1,4)] for slot in range(1,4)]

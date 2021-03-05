@@ -62,7 +62,13 @@ def test_take_turn_adds_correct_mark():
   board.take_turn(8, 'X')
   assert board._slots == slots
 
-def test_prints_empty_board():
+def test_take_turn_is_false_for_taken_slot():
+  board = Board()
+  board.take_turn(1, 'X')
+
+  assert board.take_turn(1, ')') == False
+
+def test_prints_board():
   empty_board_print  = " 1 | X | 3 \n"
   empty_board_print += "---|---|---\n"
   empty_board_print += " 4 | X | 6 \n"
