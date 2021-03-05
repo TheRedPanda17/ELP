@@ -11,12 +11,10 @@ class Runner:
     self._game = Game(self._player1, self._player2, board)
 
   def run(self):
-    print('\nWelcome to Tic Tac Toe in Python')
     while self._play_again():
       result = self._game.play()
-      self._add_score_to_winner(result)
+      self._end_game(result)
       self._reset()
-      self._games_played += 1
 
     print('\nThanks for playing!\n')
 
@@ -28,16 +26,20 @@ class Runner:
 
   def _play_again(self):
     if self._games_played == 0: return True
-    print("\nPlay Again? (Y\\N)")
-    choice = input()
+    choice = input("\nPlay Again? (Y\\N)")
     return choice == 'Y' or choice == 'y'
 
-  def _add_score_to_winner(self, result):
+  def _end_game(self, result):
+    winner = self._get_winner(result)
+    if winner:
+      winner.add_win()
+      print('\n{0} won!'.format(winner.name))
+    else: print("Cat's Game")
+    self._games_played += 1
+
+  def _get_winner(self, result):
     symbol = result.name[-1].upper()
     if symbol == self._player1.symbol:
-      self._player1.add_win()
-      print('\n{0} won!'.format(self._player1.name))
+      return self._player1
     elif symbol == self._player2.symbol:
-      self._player2.add_win()
-      print('\n{0} won!'.format(self._player2.name))
-    else: print('Tie game!')
+      return self._player2

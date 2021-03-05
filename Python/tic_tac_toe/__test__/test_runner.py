@@ -36,43 +36,43 @@ def test_play_again_returns_true_y_input(monkeypatch):
   runner = Runner(Player('1'), Player('2'))
   runner._games_played = 1
 
-  monkeypatch.setattr('builtins.input', lambda: 'Y')
+  monkeypatch.setattr('builtins.input', lambda _: 'Y')
   assert runner._play_again() == True
 
-  monkeypatch.setattr('builtins.input', lambda: 'y')
+  monkeypatch.setattr('builtins.input', lambda _: 'y')
   assert runner._play_again() == True
 
 def test_play_again_returns_false_non_y_input(monkeypatch):
   runner = Runner(Player('1'), Player('2'))
   runner._games_played = 1
 
-  monkeypatch.setattr('builtins.input', lambda: 'N')
+  monkeypatch.setattr('builtins.input', lambda _: 'N')
   assert runner._play_again() == False
 
-  monkeypatch.setattr('builtins.input', lambda: 'n')
+  monkeypatch.setattr('builtins.input', lambda _: 'n')
   assert runner._play_again() == False
 
-  monkeypatch.setattr('builtins.input', lambda: 'asdf')
+  monkeypatch.setattr('builtins.input', lambda _: 'asdf')
   assert runner._play_again() == False
 
 def test_add_score_to_winner_p1():
   runner = Runner(Player('1'), Player('2'))
 
-  runner._add_score_to_winner(Game_Results.player_x)
+  runner._end_game(Game_Results.player_x)
 
   assert runner._player1.wins == 1
 
 def test_add_score_to_winner_p2():
   runner = Runner(Player('1'), Player('2'))
 
-  runner._add_score_to_winner(Game_Results.player_o)
+  runner._end_game(Game_Results.player_o)
 
   assert runner._player2.wins == 1
 
 def test_add_score_to_winner_none():
   runner = Runner(Player('1'), Player('2'))
 
-  runner._add_score_to_winner(Game_Results.cats_game)
+  runner._end_game(Game_Results.cats_game)
 
   assert runner._player1.wins == 0
   assert runner._player2.wins == 0
