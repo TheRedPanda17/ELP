@@ -1,9 +1,15 @@
+from setup import get_player
+from __test__.utils import get_empty_board
+from utils import get_game
 from player import Player
 from board import Board
 from game import Game
+import pytest
 
-def get_game():
-  return Game(Player('P1'), Player('P2'), Board())
+@pytest.fixture(autouse=True)
+def run_around_tests():
+  Player.player_count = 0
+  yield
 
 def test_game_initalizes_with_players_and_bard():
   player1 = Player('P1')
@@ -30,3 +36,34 @@ def test_change_turn_updates_next_up():
   game.change_turns()
 
   assert game._next_up == player2
+
+def test_run_turn_gets_turn_and_updates_board(monkeypatch):
+  game = get_game()
+  monkeypatch.setattr('builtins.input', lambda: '1')
+  game.run_turn()
+  expected_board = get_empty_board()
+  expected_board[0][0] = 'X'
+
+  assert expected_board == game.board._slots
+
+  monkeypatch.setattr('builtins.input', lambda: "3")
+  game.run_turn()
+  expected_board[0][2] = 'O'
+
+  assert expected_board == game.board._slots
+
+def test_get_score_returns_names_and_scores():
+  player1 = Player('Tam')
+  player1.wins = 1
+  player2 = Player('Mat')
+  player2.wins = 3
+  expected_message = "Tam has 1 wins. Mat has 3 wins."
+
+  game = Game(player1, player2, Board())
+
+  assert game.get_score() == expected_message
+
+def test_game_initializes_with_no_winner():
+  game = get_game()
+
+  assert game._has_winner == False

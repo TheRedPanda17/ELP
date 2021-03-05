@@ -1,8 +1,7 @@
+from utils import get_empty_board
 from board import Board
 from io import StringIO
 import sys
-
-def get_empty_board(): return [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 
 def test_board_init_returns_three_rows_of_three_slots():
   board = Board()

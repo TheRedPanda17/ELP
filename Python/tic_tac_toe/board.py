@@ -10,12 +10,12 @@ class Board:
     self._slots[row][col] = symbol
 
   def clean_board(self):
-    self._slots = [[' ' for slot in range(1,4)] for slot in range(1,4)]
+    self._slots = [[' ' for _ in range(1,4)] for slot in range(1,4)]
 
-  def _get_col_from_index(self, index):
+  def _get_col_from_index(_, index):
     return (index - 1) % 3
 
-  def _get_row_from_index(self, index):
+  def _get_row_from_index(_, index):
     return int((index - 1) / 3)
 
   def _get_index_from_row_and_col(self, row, col):
