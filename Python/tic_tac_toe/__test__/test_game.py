@@ -1,6 +1,6 @@
+from checker import Game_Results
 from setup import get_player
-from __test__.utils import get_empty_board
-from utils import get_game
+from utils import get_empty_board, get_game
 from player import Player
 from board import Board
 from game import Game
@@ -27,6 +27,11 @@ def test_player_1_is_next_up():
   game = Game(player1, Player('P2'), Board())
 
   assert game._next_up == player1
+
+def test_game_result_is_not_over():
+  game = get_game()
+
+  assert game._result == Game_Results.not_over
 
 def test_change_turn_updates_next_up():
   player1 = Player('P1')
@@ -84,8 +89,3 @@ def test_get_score_returns_names_and_scores():
   game = Game(player1, player2, Board())
 
   assert game.get_score() == expected_message
-
-def test_game_initializes_with_no_winner():
-  game = get_game()
-
-  assert game._has_winner == False

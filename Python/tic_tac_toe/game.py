@@ -1,17 +1,22 @@
+from checker import Checker, Game_Results
+
 class Game:
   def __init__(self, player1, player2, board):
       self.player1 = player1
       self.player2 = player2
       self.board = board
-      self._has_winner = False
+      self._checker = Checker(self.board)
+      self._result = Game_Results.not_over
 
       self._next_up = player1
   
   def start(self):
     print('\nNew Game\n')
     print('Current score: {0}'.format(self.get_score()))
-    while not self._has_winner:
+    print(self._result)
+    while self._result == Game_Results.not_over:
       self.run_turn()
+      self._result = self._checker.get_result()
 
   def run_turn(self):
     print("\n{0}'s turn. Pick a slot\n".format(self._next_up.name))

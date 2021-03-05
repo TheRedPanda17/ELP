@@ -17,7 +17,7 @@ def test_board_is_full_true():
 
 def test_board_is_full_false():
   board = Board()
-  board._slots = [['X', 'X', 'O'], ['O', 'X', 'O'], ['X', 'O', ' ']]
+  board._slots = [['X', 'X', 'O'], ['O', 'X', 'O'], ['X', 'O', '9']]
   checker = Checker(board)
 
   assert checker._board_is_full() == False
@@ -37,8 +37,8 @@ def test_game_results_in_tie_on_full_board():
   board = Board()
   board._slots = [
     ['X', 'X', 'O'], 
-    ['O', 'O', 'X'], 
-    ['X', 'O', ' ']
+    ['O', '5', 'X'], 
+    ['X', 'O', '9']
   ]
   checker = Checker(board)
 

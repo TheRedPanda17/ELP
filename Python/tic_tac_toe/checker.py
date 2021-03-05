@@ -19,7 +19,7 @@ class Checker:
   def get_result(self):
     if self._player_wins('X'): return Game_Results.player_x
     elif self._player_wins('O'): return Game_Results.player_o
-    elif self._board_is_full: return Game_Results.cats_game
+    elif self._board_is_full(): return Game_Results.cats_game
     return Game_Results.not_over
 
   def _player_wins(self, symbol):
@@ -35,7 +35,8 @@ class Checker:
     return indexes
 
   def _board_is_full(self):
-    return len(list(filter(lambda slot: slot == ' ', self._get_flat_board()))) == 0
+    return len(list(filter(
+      lambda slot: slot != 'X' and slot != 'O', self._get_flat_board()))) == 0
 
   def _get_flat_board(self):
     return list([item for sublist in self._board._slots for item in sublist])
