@@ -1,11 +1,11 @@
+from board import Board
 from checker import Checker, Game_Results
 
 class Game:
-  def __init__(self, player1, player2, board):
+  def __init__(self, player1, player2):
       self.player1 = player1
       self.player2 = player2
-      self.board = board
-      self._checker = Checker(self.board)
+      self.board = Board()
       self._set_who_starts()
 
   def _set_who_starts(self):
@@ -16,11 +16,9 @@ class Game:
   
   def play(self, result = Game_Results.not_over):
     print('\nNew Game\n\nCurrent score: {0}'.format(self.get_score()))
-
     while result == Game_Results.not_over:
       self.run_turn()
-      result = self._checker.get_result()
-
+      result = Checker(self.board).get_result()
     return result
 
   def run_turn(self):
@@ -45,9 +43,6 @@ class Game:
     )
 
   def _get_slot_and_take_turn(self):
-    try:
-      slot = int(input())
-      if slot not in range(1, 10): return False
-    except:
-      return False
-    return self.board.take_turn(slot, self._next_up.symbol)
+    slot = input()
+    if not slot.isdigit() or int(slot) not in range(1, 10): return False
+    return self.board.take_turn(int(slot), self._next_up.symbol)

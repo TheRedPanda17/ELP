@@ -7,8 +7,7 @@ class Runner:
     self._player1 = player1
     self._player2 = player2
     self._games_played = 0
-    board = Board()
-    self._game = Game(self._player1, self._player2, board)
+    self._game = Game(self._player1, self._player2)
 
   def run(self):
     while self._play_again():
@@ -21,8 +20,7 @@ class Runner:
   def _reset(self):
     self._player1.switch_symbol()
     self._player2.switch_symbol()
-    board = Board()
-    self._game = Game(self._player1, self._player2, board)
+    self._game = Game(self._player1, self._player2)
 
   def _play_again(self):
     if self._games_played == 0: return True
