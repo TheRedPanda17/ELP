@@ -3,10 +3,10 @@ from checker import Checker, Game_Results
 
 class Game:
   def __init__(self, player1, player2):
-      self.player1 = player1
-      self.player2 = player2
-      self.board = Board()
-      self._set_who_starts()
+    self.player1 = player1
+    self.player2 = player2
+    self.board = Board()
+    self._set_who_starts()
 
   def _set_who_starts(self):
     if self.player1.symbol == 'X':

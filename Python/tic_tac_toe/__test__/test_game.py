@@ -2,7 +2,6 @@ from checker import Game_Results
 from setup import get_player
 from utils import get_empty_board, get_game
 from player import Player
-from board import Board
 from game import Game
 import pytest
 

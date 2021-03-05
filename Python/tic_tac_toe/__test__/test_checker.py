@@ -31,7 +31,7 @@ def test_get_symbols_indexes():
   ]
   checker = Checker(board)
 
-  assert checker._get_symbols_indexes('X') == {0, 1, 5, 6, 8}
+  assert checker._get_symbol_indexes('X') == {0, 1, 5, 6, 8}
 
 def test_game_results_in_tie_on_full_board():
   board = Board()

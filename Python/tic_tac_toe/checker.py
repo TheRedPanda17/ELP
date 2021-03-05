@@ -3,14 +3,8 @@ from enum import Enum
 
 class Checker:
   winning_combos = [
-    {0,1,2},
-    {3,4,5},
-    {6,7,8},
-    {0,3,6},
-    {1,4,7},
-    {2,5,8},
-    {0,4,8},
-    {2,4,6} 
+    {0,1,2}, {3,4,5}, {6,7,8}, {0,3,6},
+    {1,4,7}, {2,5,8}, {0,4,8}, {2,4,6} 
   ]
 
   def __init__(self, board):
@@ -23,15 +17,14 @@ class Checker:
     return Game_Results.not_over
 
   def _player_wins(self, symbol):
-    indexes = self._get_symbols_indexes(symbol)
+    indexes = self._get_symbol_indexes(symbol)
     for combo in self.winning_combos:
       if combo.issubset(indexes): return True
 
-  def _get_symbols_indexes(self, symbol):
+  def _get_symbol_indexes(self, symbol):
     indexes = set()
     for index, slot in enumerate(self._get_flat_board()):
-      if slot == symbol:
-        indexes.add(index)
+      if slot == symbol: indexes.add(index)
     return indexes
 
   def _board_is_full(self):
