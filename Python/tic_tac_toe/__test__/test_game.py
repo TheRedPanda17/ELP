@@ -12,8 +12,8 @@ def run_around_tests():
   yield
 
 def test_game_initalizes_with_players_and_bard():
-  player1 = Player('P1')
-  player2 = Player('P2')
+  player1 = Player('P1', 'X')
+  player2 = Player('P2', 'O')
   board = Board()
 
   game = Game(player1, player2, board)
@@ -23,20 +23,20 @@ def test_game_initalizes_with_players_and_bard():
   assert game.board == board
 
 def test_player_1_is_next_up():
-  player1 = Player('P1')
-  game = Game(player1, Player('P2'), Board())
+  player1 = Player('P1', 'X')
+  game = Game(player1, Player('P2', 'O'), Board())
 
   assert game._next_up == player1
 
 def test_player_2_is_next_up():
-  player2 = Player('P2')
-  game = Game(Player('P1'), player2, Board())
+  player2 = Player('P2', 'X')
+  game = Game(Player('P1', 'O'), player2, Board())
 
   assert game._next_up == player2
 
 def test_change_turn_updates_next_up():
-  player1 = Player('P1')
-  player2 = Player('P2')
+  player1 = Player('P1', 'X')
+  player2 = Player('P2', 'O')
   game = Game(player1, player2, Board())
 
   game.change_turns()
@@ -88,8 +88,8 @@ def test_run_turn_bad_input_too_high(monkeypatch):
   assert expected_board == game.board._slots
 
 def test_turn_on_taken_slot_does_not_change_turn(monkeypatch):
-  player1 = Player('P1')
-  player2 = Player('P2')
+  player1 = Player('P1', 'X')
+  player2 = Player('P2', 'O')
   game = Game(player1, player2, Board())
 
   monkeypatch.setattr('builtins.input', lambda: '1')
@@ -99,9 +99,9 @@ def test_turn_on_taken_slot_does_not_change_turn(monkeypatch):
   assert game._next_up == player2
 
 def test_get_score_returns_names_and_scores():
-  player1 = Player('Tam')
+  player1 = Player('Tam', 'X')
   player1.wins = 1
-  player2 = Player('Mat')
+  player2 = Player('Mat', 'O')
   player2.wins = 3
   expected_message = "Tam has 1 wins. Mat has 3 wins."
 
