@@ -34,7 +34,10 @@ class Runner:
 
   def _add_score_to_winner(self, result):
     symbol = result.name[-1].upper()
-    print(self._player1.symbol)
-    print(self._player2.symbol)
-    if symbol == self._player1.symbol: self._player1.add_win()
-    elif symbol == self._player2.symbol: self._player2.add_win()
+    if symbol == self._player1.symbol:
+      self._player1.add_win()
+      print('\n{0} won!'.format(self._player1.name))
+    elif symbol == self._player2.symbol:
+      self._player2.add_win()
+      print('\n{0} won!'.format(self._player2.name))
+    else: print('Tie game!')

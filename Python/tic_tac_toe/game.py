@@ -45,5 +45,9 @@ class Game:
     )
 
   def _get_slot_and_take_turn(self):
-    slot = int(input())
+    try:
+      slot = int(input())
+      if slot not in range(1, 10): return False
+    except:
+      return False
     return self.board.take_turn(slot, self._next_up.symbol)

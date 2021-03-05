@@ -69,6 +69,24 @@ def test_run_turn_on_taken_slot_does_not_update(monkeypatch):
 
   assert expected_board == game.board._slots
 
+def test_run_turn_bad_input_nan(monkeypatch):
+  game = get_game()
+  expected_board = get_empty_board()
+
+  monkeypatch.setattr('builtins.input', lambda: 'N')
+  game.run_turn()
+
+  assert expected_board == game.board._slots
+
+def test_run_turn_bad_input_too_high(monkeypatch):
+  game = get_game()
+  expected_board = get_empty_board()
+
+  monkeypatch.setattr('builtins.input', lambda: '56')
+  game.run_turn()
+
+  assert expected_board == game.board._slots
+
 def test_turn_on_taken_slot_does_not_change_turn(monkeypatch):
   player1 = Player('P1')
   player2 = Player('P2')
