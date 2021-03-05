@@ -63,7 +63,7 @@ def test_run_turn_on_taken_slot_does_not_update(monkeypatch):
 
   assert expected_board == game.board._slots
 
-def test_run_turn_on_taken_slot_does_not_change_turn(monkeypatch):
+def test_turn_on_taken_slot_does_not_change_turn(monkeypatch):
   player1 = Player('P1')
   player2 = Player('P2')
   game = Game(player1, player2, Board())

@@ -7,7 +7,7 @@ def test_runner_initializes_with_game():
 
   assert runner._game == game
 
-def test_runner_initializes_with_zero_games_played():
+def test_runner_initializes_with_zero_games():
   game = get_game()
   runner = Runner(game)
 

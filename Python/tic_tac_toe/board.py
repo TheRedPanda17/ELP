@@ -2,10 +2,9 @@ class Board:
   def __init__(self):
     self.clean_board()
 
-
   def take_turn(self, index, symbol):
-    col = self._get_col_from_index(index)
-    row = self._get_row_from_index(index)
+    col = self.get_col_from_index(index)
+    row = self.get_row_from_index(index)
 
     if self._slots[row][col] == " ":
       self._slots[row][col] = symbol
@@ -14,15 +13,6 @@ class Board:
 
   def clean_board(self):
     self._slots = [[' ' for _ in range(1,4)] for slot in range(1,4)]
-
-  def _get_col_from_index(_, index):
-    return (index - 1) % 3
-
-  def _get_row_from_index(_, index):
-    return int((index - 1) / 3)
-
-  def _get_index_from_row_and_col(self, row, col):
-    return (col + 1) + (3 * row)
 
   def __str__(self):
     string = ""
@@ -42,4 +32,15 @@ class Board:
     if self._slots[row_num][col_num] != ' ':
       return self._slots[row_num][col_num]
     else:
-      return self._get_index_from_row_and_col(row_num, col_num)
+      return self.get_index_from_row_and_col(row_num, col_num)
+
+
+  # Export 
+  def get_col_from_index(_, index):
+    return (index - 1) % 3
+
+  def get_row_from_index(_, index):
+    return int((index - 1) / 3)
+
+  def get_index_from_row_and_col(_, row, col):
+    return (col + 1) + (3 * row)
