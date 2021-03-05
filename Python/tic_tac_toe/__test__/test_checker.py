@@ -64,7 +64,7 @@ def test_game_results_in_px_win():
   ]
   checker = Checker(board)
 
-  assert checker.get_result() == Game_Results.player_1
+  assert checker.get_result() == Game_Results.player_x
 
 def test_game_results_in_px_win():
   board = Board()
@@ -75,4 +75,4 @@ def test_game_results_in_px_win():
   ]
   checker = Checker(board)
 
-  assert checker.get_result() == Game_Results.player_2
+  assert checker.get_result() == Game_Results.player_o

@@ -2,6 +2,12 @@ from player import Player
 from utils import get_game
 from runner import Runner
 from checker import Game_Results
+import pytest
+
+@pytest.fixture(autouse=True)
+def run_around_tests():
+  Player.player_count = 0
+  yield
 
 def test_runner_initializes_with_players():
   player1 = Player('1')
@@ -52,14 +58,14 @@ def test_play_again_returns_false_non_y_input(monkeypatch):
 def test_add_score_to_winner_p1():
   runner = Runner(Player('1'), Player('2'))
 
-  runner._add_score_to_winner(Game_Results.player_1)
+  runner._add_score_to_winner(Game_Results.player_x)
 
   assert runner._player1.wins == 1
 
 def test_add_score_to_winner_p2():
   runner = Runner(Player('1'), Player('2'))
 
-  runner._add_score_to_winner(Game_Results.player_2)
+  runner._add_score_to_winner(Game_Results.player_o)
 
   assert runner._player2.wins == 1
 

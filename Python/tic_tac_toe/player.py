@@ -12,4 +12,4 @@ class Player:
     self.wins += 1
 
   def switch_symbol(self):
-    self.symbol = 'X' if self.symbol == 'O' < 1 else 'O'
+    self.symbol = 'X' if self.symbol == 'O' else 'O'

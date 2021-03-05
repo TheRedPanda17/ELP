@@ -6,12 +6,17 @@ class Game:
       self.player2 = player2
       self.board = board
       self._checker = Checker(self.board)
+      self._set_who_starts()
 
-      self._next_up = player1
+  def _set_who_starts(self):
+    if self.player1.symbol == 'X':
+      self._next_up = self.player1
+    else:
+      self._next_up = self.player2
   
   def play(self, result = Game_Results.not_over):
     print('\nNew Game\n\nCurrent score: {0}'.format(self.get_score()))
-    
+
     while result == Game_Results.not_over:
       self.run_turn()
       result = self._checker.get_result()

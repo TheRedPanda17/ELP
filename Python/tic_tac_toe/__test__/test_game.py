@@ -28,6 +28,12 @@ def test_player_1_is_next_up():
 
   assert game._next_up == player1
 
+def test_player_2_is_next_up():
+  player2 = Player('P2')
+  game = Game(Player('P1'), player2, Board())
+
+  assert game._next_up == player2
+
 def test_change_turn_updates_next_up():
   player1 = Player('P1')
   player2 = Player('P2')
