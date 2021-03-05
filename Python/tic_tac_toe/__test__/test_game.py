@@ -28,11 +28,6 @@ def test_player_1_is_next_up():
 
   assert game._next_up == player1
 
-def test_game_result_is_not_over():
-  game = get_game()
-
-  assert game._result == Game_Results.not_over
-
 def test_change_turn_updates_next_up():
   player1 = Player('P1')
   player2 = Player('P2')

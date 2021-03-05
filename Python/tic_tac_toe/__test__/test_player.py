@@ -28,3 +28,18 @@ def test_second_player_has_symbol_o():
   player2 = Player('p2')
 
   assert player2.symbol == 'O'
+
+def test_add_win():
+  player = Player('Player')
+  player.add_win()
+
+  assert player.wins == 1
+
+def test_switch_symbol():
+  player = Player('Player')
+
+  assert player.symbol == 'X'
+
+  player.switch_symbol()
+
+  assert player.symbol == 'O'

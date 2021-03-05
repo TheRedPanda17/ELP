@@ -17,8 +17,8 @@ class Checker:
       self._board = board
 
   def get_result(self):
-    if self._player_wins('X'): return Game_Results.player_x
-    elif self._player_wins('O'): return Game_Results.player_o
+    if self._player_wins('X'): return Game_Results.player_1
+    elif self._player_wins('O'): return Game_Results.player_2
     elif self._board_is_full(): return Game_Results.cats_game
     return Game_Results.not_over
 
@@ -42,7 +42,7 @@ class Checker:
     return list([item for sublist in self._board._slots for item in sublist])
 
 class Game_Results(Enum):
-  player_x = 1
-  player_o = 2
+  player_1 = 1
+  player_2 = 2
   cats_game = 3
   not_over = 4
